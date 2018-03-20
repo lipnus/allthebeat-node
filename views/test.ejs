@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>test.ejs</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Value: <%= testValue %></h1>
+
+    test.ejs를 GET으로 호출
+
+    <br/><br/><br/>
+
+    <form action="" method="post">
+       <div> - group_code : <input type="text" name="input1" placeholder="아무말"> </div><br/>
+    </form>
+
+    <button class="sendbtn">전송</button>
+
+    <div class="result"></div>
+
+
+<!-- =========================================================================== -->
+<!-- =========================================================================== -->
+
+    <script>
+        document.querySelector('.sendbtn').addEventListener('click', function(e) {
+          var input1 = document.getElementsByName('input1')[0].value;
+          sendAjax('/android/groups', {'group_code':input1});
+        })
+
+
+        function sendAjax(url, data){
+
+          data = JSON.stringify(data);
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', url);
+          xhr.setRequestHeader('content-type', "application/json");
+          xhr.send(data);
+
+          console.log("보냄(sendAjax): " + data);
+
+
+          // 데이터 수신이 완료되면 표시
+          xhr.addEventListener('load', function(){
+
+            var result = JSON.parse(xhr.responseText);
+            var resultDiv = document.querySelector('.result');
+
+            console.log("받음(addEventListener)" + result.output1 + ", " + result.output2);
+            resultDiv.innerHTML = result.result;
+          });
+        }
+    </script>
+
+  </body>
+</html>
