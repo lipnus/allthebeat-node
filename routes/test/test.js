@@ -11,25 +11,15 @@ router.get('/', function(req, res){
 });
 
 
-// 1. /test , POST실험
+// postTest
 router.post('/', function(req,res){
 
-  console.log("test.js POST");
-	var input1 = req.body.input1;
-	var input2 = req.body.input2;
+	input1 = req.body.input;
 
-	var output1 = "반환값1";
-	var output2 = "반환값2";
-
-  var responseData = {'result':'ok'};
-  responseData.input1 = input1;
-  responseData.input2 = input2;
-  responseData.output1 = output1;
-  responseData.output2 = output2;
-
+  var responseData = {};
+  responseData.result = "nodejs server test ok";
+  responseData.input = input1;
 	res.json( responseData );
 })
-
-
 
 module.exports = router;

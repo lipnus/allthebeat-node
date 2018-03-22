@@ -59,7 +59,7 @@ app.use(function(err, req, res, next) {
 // ------- creates Server -------
 // module.exports = app;
 var server = app.listen(app.get('port'), function() {
-  console.log('Start HMTR Server on port ' + server.address().port);
+  console.log('Start ALLTHEBEAT Server on port ' + server.address().port);
 });
 
 
