@@ -30,7 +30,7 @@ router.post('/', function(req,res){
 	var sound_pk = req.body.sound_pk;
 
 	//음원리스트
-	var sql = 'select sound_data.pk AS sound_pk, sound_data.user_pk AS beatmaker_pk, user.name AS beatmaker_name, sound_data.sound_name, sound_data.sound_path, sound_data.sound_path, sound_data.img_path, sound_data.genre1, sound_data.genre2, sound_data.mood1, sound_data.mood2, sound_data.mood3, sound_data.type1, sound_data.type2, sound_data.type3, sound_data.like_count from sound_data, user where sound_data.pk=? AND sound_data.user_pk = user.pk';
+	var sql = 'select sound_data.pk AS sound_pk, sound_data.user_pk AS beatmaker_pk, user.nickname AS beatmaker_nickname, sound_data.sound_name, sound_data.bpm, sound_data.sound_path, sound_data.sound_path, sound_data.img_path, sound_data.genre1, sound_data.genre2, sound_data.mood1, sound_data.mood2, sound_data.mood3, sound_data.type1, sound_data.type2, sound_data.type3, sound_data.like_count from sound_data, user where sound_data.pk=? AND sound_data.user_pk = user.pk';
 	var factor = [sound_pk];
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
@@ -38,7 +38,7 @@ router.post('/', function(req,res){
 		var responseData = {};
 				responseData.sound_pk= rows[0].sound_pk;
 				responseData.beatmaker_pk= rows[0].beatmaker_pk;
-				responseData.beatmaker_name= rows[0].beatmaker_name;
+				responseData.beatmaker_nickname= rows[0].beatmaker_nickname;
 				responseData.sound_path= rows[0].sound_path;
 				responseData.sound_name= rows[0].sound_name;
 				responseData.sound_bpm= rows[0].bpm;
@@ -51,7 +51,7 @@ router.post('/', function(req,res){
 				responseData.type1= rows[0].type1;
 				responseData.type2= rows[0].type2;
 				responseData.type3= rows[0].type3;
-				responseData.like_cound= rows[0].like_count;
+				responseData.like_count= rows[0].like_count;
 				responseData.like_my= 0;
 		res.json( responseData );
 
