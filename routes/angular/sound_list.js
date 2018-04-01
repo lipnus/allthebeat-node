@@ -43,13 +43,17 @@ router.post('/', function(req,res){
 		//==================================================
 		responseData.sound_recommend_list = [];
 		for(var i=0; i<5; i++){
+
+			//랜덤추출
+			var j =Math.floor(Math.random() * rows.length) + 0;
+
 			var obj = {
-				sound_pk: rows[i].sound_pk,
-				sound_name: rows[i].sound_name,
-				sound_path: rows[i].sound_path,
-				sound_bpm: rows[i].bpm,
-				beatmaker_nickname: rows[i].beatmaker_nickname,
-				img_path: rows[i].img_path,
+				sound_pk: rows[j].sound_pk,
+				sound_name: rows[j].sound_name,
+				sound_path: rows[j].sound_path,
+				sound_bpm: rows[j].bpm,
+				beatmaker_nickname: rows[j].beatmaker_nickname,
+				img_path: rows[j].img_path,
 				like_count: 2,
 				like_my: 0
 			};
@@ -73,11 +77,41 @@ router.post('/', function(req,res){
 			responseData.sound_list.push(obj);
 		}; //for
 
+		// shuffle(responseData.sound_list); //리스트를 한번 섞어준다
+
 
 		res.json( responseData );
 
 	});//sql-1
 });//post
 
+
+
+//행렬순서를 섞는 함수
+function shuffle(arr){
+ if(arr instanceof Array){
+	  var len = arr.length;
+	  if(len == 1) return arr;
+	  var i = len * 2;
+
+		while(i > 0){
+		   var idx1 = Math.floor(Math.random()* len);
+		   var idx2 = Math.floor(Math.random()* len);
+
+			 // var idx1 = Math.floor(0.5* len);
+		   // var idx2 = Math.floor(0.3* len);
+
+		   if(idx1 == idx2) continue;
+		   var temp = arr[idx1];
+		   arr[idx1] = arr[idx2];
+		   arr[idx2] = temp;
+		   i--;
+	  }
+	}
+	else{
+	  alert("No Array Object");
+	}
+	return arr;
+}
 
 module.exports = router;
