@@ -19,6 +19,7 @@ var android_delete_aptitude = require('./android/delete_aptitude');
 //[Allthebeat WEB App]
 var sound_list = require('./angular/sound_list');
 var sound_detail = require('./angular/sound_detail');
+var purchase = require('./angular/purchase');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -32,6 +33,7 @@ router.use('/test', test);
 // All the beat angular
 router.use('/sound_list', sound_list);
 router.use('/sound_detail', sound_detail);
+router.use('/purchase', purchase);
 
 //안드로이드
 router.use('/android/group', android_group);
