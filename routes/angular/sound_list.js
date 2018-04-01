@@ -46,6 +46,7 @@ router.post('/', function(req,res){
 
 			//랜덤추출
 			var j =Math.floor(Math.random() * rows.length) + 0;
+			console.log("test: " + j + " / " + rows[j].sound_name);
 
 			var obj = {
 				sound_pk: rows[j].sound_pk,
