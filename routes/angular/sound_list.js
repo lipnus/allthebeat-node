@@ -30,7 +30,7 @@ router.post('/', function(req,res){
 	user_pk = req.body.user_pk;
 
 	//음원리스트
-	var sql = 'select sound_data.pk AS sound_pk, sound_data.sound_name, sound_data.sound_path, sound_data.bpm, user.nickname AS beatmaker_nickname, sound_data.img_path, sound_data.like_count from sound_data, user where sound_data.user_pk = user.pk';
+	var sql = 'select sound_data.pk AS sound_pk, sound_data.sound_name, sound_data.sound_path, sound_data.bpm, user.nickname AS beatmaker_nickname, sound_data.img_path, sound_data.like_count from sound_data, user where sound_data.user_pk = user.pk ORDER BY sound_data.pk DESC';
 	var factor = [];
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
