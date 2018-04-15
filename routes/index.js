@@ -21,6 +21,11 @@ var sound_list = require('./angular/sound_list');
 var sound_detail = require('./angular/sound_detail');
 var purchase = require('./angular/purchase');
 var authentication = require('./angular/authentication');
+var auth_naver = require('./angular/auth_naver');
+var user = require('./angular/user');
+var user_like = require('./angular/user_like');
+
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -36,6 +41,11 @@ router.use('/sound_list', sound_list);
 router.use('/sound_detail', sound_detail);
 router.use('/purchase', purchase);
 router.use('/authentication', authentication);
+router.use('/auth_naver', auth_naver);
+router.use('/user', user);
+router.use('/user_like', user_like);
+
+
 
 
 

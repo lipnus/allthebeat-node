@@ -26,12 +26,34 @@ router.get('/', function(req, res){
 
 router.post('/', function(req,res){
 
-	//사용자의 아이디
-	user_pk = req.body.user_pk;
+	//토큰(비로그인 상태이면 0)
+	token = req.body.token;
+	console.log(token);
+
+	//토큰을 이용하여 user_pk를 찾는다
+	if(token==0){
+		sound_list(0, res);
+	}
+	else{
+
+		var sql = 'SELECT * FROM `user` WHERE token=?';
+		var factor = [token];
+		var query = connection.query(sql, factor, function(err, rows){
+			if(err) throw err;
+
+			var user_pk = 0;
+			user_pk=rows[0].pk;
+			sound_list(user_pk, res);
+
+		});//sql
+	}
+});//post
+
+function sound_list(usre_pk, res){
 
 	//음원리스트
-	var sql = 'select sound_data.pk AS sound_pk, sound_data.sound_name, sound_data.sound_path, sound_data.bpm, user.nickname AS beatmaker_nickname, sound_data.img_path, sound_data.like_count from sound_data, user where sound_data.user_pk = user.pk ORDER BY sound_data.pk DESC';
-	var factor = [];
+	var sql = 'SELECT sound_data.pk AS sound_pk, sound_data.sound_name, sound_data.sound_path, sound_data.bpm, user.nickname AS beatmaker_nickname, sound_data.img_path, sound_data.like_count, user_like.user_pk AS like_my FROM sound_data INNER JOIN user ON sound_data.user_pk = user.pk LEFT JOIN user_like ON sound_data.pk = user_like.sound_pk AND user_like.user_pk = ? ORDER BY sound_data.pk DESC';
+	var factor = [usre_pk];
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 
@@ -46,7 +68,13 @@ router.post('/', function(req,res){
 
 			//랜덤추출
 			var j =Math.floor(Math.random() * rows.length) + 0;
-			console.log("test: " + j + " / " + rows[j].sound_name);
+			// console.log("test: " + j + " / " + rows[j].sound_name);
+
+			var my_heart=0;
+			// console.log(rows[j].sound_pk + " / "+ rows[j].like_my)
+			if(rows[j].like_my != null){
+				my_heart=1;
+			}
 
 			var obj = {
 				sound_pk: rows[j].sound_pk,
@@ -55,16 +83,25 @@ router.post('/', function(req,res){
 				sound_bpm: rows[j].bpm,
 				beatmaker_nickname: rows[j].beatmaker_nickname,
 				img_path: rows[j].img_path,
-				like_count: 2,
-				like_my: 0
+				like_count: rows[i].like_count,
+				like_my: my_heart
 			};
 			responseData.sound_recommend_list.push(obj);
 		}; //for
 
 
+
+
 		//전체리스트
 		responseData.sound_list = [];
 		for(var i=0; i<rows.length; i++){
+
+			var my_heart=0;
+			// console.log(rows[i].sound_pk + " / "+ rows[i].like_my)
+			if(rows[i].like_my != null){
+				my_heart=1;
+			}
+
 			var obj = {
 				sound_pk: rows[i].sound_pk,
 				sound_name: rows[i].sound_name,
@@ -72,20 +109,18 @@ router.post('/', function(req,res){
 				sound_bpm: rows[i].bpm,
 				beatmaker_nickname: rows[i].beatmaker_nickname,
 				img_path: rows[i].img_path,
-				like_count: 2,
-				like_my: 0
+				like_count: rows[i].like_count,
+				like_my: my_heart
 			};
 			responseData.sound_list.push(obj);
 		}; //for
 
 		// shuffle(responseData.sound_list); //리스트를 한번 섞어준다
 
-
 		res.json( responseData );
 
 	});//sql-1
-});//post
-
+}
 
 
 //행렬순서를 섞는 함수

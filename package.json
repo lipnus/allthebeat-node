@@ -15,6 +15,7 @@
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
     "nodemailer": "^4.6.4",
+    "request": "^2.85.0",
     "serve-favicon": "~2.4.5"
   }
 }
