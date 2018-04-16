@@ -131,8 +131,8 @@ router.get('/', function (req, res) {
 											factor = [access_token, state, bodyData.response.id];
       								query = connection.query(sql, factor, function(err, rows){
         								if(err) throw err;
-												console.log("검색id : "+ bodyData.response.id);
-												console.log("토큰값: "+ access_token);
+												// console.log("검색id : "+ bodyData.response.id);
+												// console.log("토큰값: "+ access_token);
 
 												// res.redirect('http://localhost:4200/naver/' + state);
 												res.redirect(angularPath + '/naver/' + state);

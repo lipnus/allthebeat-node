@@ -24,7 +24,7 @@ connection.connect();
 router.post('/', function(req, res){
 	token = req.body.token;
 
-	console.log("token_please" + state);
+	// console.log("token_please" + state);
 
 	//state에 해당하는 token검색
 	var sql = 'SELECT * FROM `user` WHERE token=?';
