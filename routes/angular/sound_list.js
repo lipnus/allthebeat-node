@@ -49,11 +49,11 @@ router.post('/', function(req,res){
 	}
 });//post
 
-function sound_list(usre_pk, res){
+function sound_list(user_pk, res){
 
 	//음원리스트
 	var sql = 'SELECT sound_data.pk AS sound_pk, sound_data.sound_name, sound_data.sound_path, sound_data.bpm, user.nickname AS beatmaker_nickname, sound_data.img_path, sound_data.like_count, user_like.user_pk AS like_my FROM sound_data INNER JOIN user ON sound_data.user_pk = user.pk LEFT JOIN user_like ON sound_data.pk = user_like.sound_pk AND user_like.user_pk = ? ORDER BY sound_data.pk DESC';
-	var factor = [usre_pk];
+	var factor = [user_pk];
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 

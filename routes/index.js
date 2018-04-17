@@ -24,7 +24,7 @@ var authentication = require('./angular/authentication');
 var auth_naver = require('./angular/auth_naver');
 var user = require('./angular/user');
 var user_like = require('./angular/user_like');
-
+var search = require('./angular/search');
 
 
 /* GET home page. */
@@ -44,8 +44,7 @@ router.use('/authentication', authentication);
 router.use('/auth_naver', auth_naver);
 router.use('/user', user);
 router.use('/user_like', user_like);
-
-
+router.use('/search', search);
 
 
 
