@@ -42,7 +42,9 @@ router.post('/', function(req,res){
 			if(err) throw err;
 
 			var user_pk = 0;
-			user_pk=rows[0].pk;
+			if(rows.length > 0){
+					user_pk=rows[0].pk;
+			}
 			sound_list(user_pk, res);
 
 		});//sql
