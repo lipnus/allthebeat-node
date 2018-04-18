@@ -46,7 +46,7 @@ router.post('/', function(req,res){
   "가격: " + price + "</p>" +
   "추가요청사항: " + add_info + "</p>";
 
-  responseData="ok";
+  responseData={result:"ok"};
 
 
   let transporter = nodemailer.createTransport({
