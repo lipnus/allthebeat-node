@@ -19,12 +19,14 @@ var android_delete_aptitude = require('./android/delete_aptitude');
 //[Allthebeat WEB App]
 var sound_list = require('./angular/sound_list');
 var sound_detail = require('./angular/sound_detail');
+var sound_nextplay = require('./angular/sound_nextplay');
 var purchase = require('./angular/purchase');
 var authentication = require('./angular/authentication');
 var auth_naver = require('./angular/auth_naver');
 var user = require('./angular/user');
 var user_like = require('./angular/user_like');
 var search = require('./angular/search');
+
 
 
 /* GET home page. */
@@ -45,7 +47,7 @@ router.use('/auth_naver', auth_naver);
 router.use('/user', user);
 router.use('/user_like', user_like);
 router.use('/search', search);
-
+router.use('/sound_nextplay', sound_nextplay);
 
 
 //안드로이드
