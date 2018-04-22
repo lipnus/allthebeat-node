@@ -44,12 +44,14 @@ router.post('/', function(req,res){
 			var user_pk = 0;
 			if(rows.length > 0){
 					user_pk=rows[0].pk;
+					sound_list(user_pk, res);
+			}else{
+					sound_list(0, res);
 			}
-			sound_list(user_pk, res);
 
 		});//sql
 	}
-});//post
+})//post
 
 function sound_list(user_pk, res){
 
@@ -59,7 +61,13 @@ function sound_list(user_pk, res){
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 
-		var responseData = {};
+		var login = 0;
+		if(user_pk!=0){
+			login=1;
+		}
+
+		//토큰값이 유효한지 반환해줌
+		var responseData = {login:login};
 
 		//추천리스트(5개)
 		//==================================================
@@ -72,6 +80,7 @@ function sound_list(user_pk, res){
 			var j =Math.floor(Math.random() * rows.length) + 0;
 			// console.log("test: " + j + " / " + rows[j].sound_name);
 
+			//내가 좋아요 눌렀는지
 			var my_heart=0;
 			// console.log(rows[j].sound_pk + " / "+ rows[j].like_my)
 			if(rows[j].like_my != null){
@@ -98,6 +107,7 @@ function sound_list(user_pk, res){
 		responseData.sound_list = [];
 		for(var i=0; i<rows.length; i++){
 
+			//내가 좋아요 눌렀는지
 			var my_heart=0;
 			// console.log(rows[i].sound_pk + " / "+ rows[i].like_my)
 			if(rows[i].like_my != null){
