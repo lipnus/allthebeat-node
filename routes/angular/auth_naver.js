@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 connection.connect();
 
 var nodePath = "http://ec2-13-125-247-213.ap-northeast-2.compute.amazonaws.com:9000";
-var angularPath = "http://ec2-13-125-247-213.ap-northeast-2.compute.amazonaws.com/#";
+var angularPath = "http://allthebeat.com/#";
 
 // var angularPath = "http://localhost:4200/#";
 // var nodePath = "http://localhost:9000";
