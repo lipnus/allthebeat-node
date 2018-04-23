@@ -17,9 +17,6 @@ connection.connect();
 
 
 
-
-
-
 //token을 이용하여 유저정보를 가져온다
 router.post('/', function(req, res){
 	token = req.body.token;
@@ -55,7 +52,28 @@ router.post('/', function(req, res){
 });
 
 
+//유저의 정보를 갱신한다
+router.post('/update', function(req, res){
+	var token = req.body.token;
+	var nickname = req.body.nickname;
+	var mobile = req.body.mobile;
+	var sns = req.body.sns;
+	var introduce = req.body.introduce;
 
+	//확률이 적어 일단 안말들어 놨지만.. 토큰 유효성 검사하는 부분도 필요..
+
+	responseData={};
+
+	sql = 'UPDATE user SET nickname=?, mobile=?, sns=?, introduce=? WHERE token=?';
+	factor = [nickname, mobile, sns, introduce, token];
+	query = connection.query(sql, factor, function(err, rows){
+
+		if(err) throw err;
+		responseData.result="success";
+		res.json( responseData );
+
+	});
+});
 
 
 
