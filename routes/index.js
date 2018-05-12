@@ -26,6 +26,7 @@ var auth_naver = require('./angular/auth_naver');
 var user = require('./angular/user');
 var user_like = require('./angular/user_like');
 var user_update = require('./angular/user_update');
+var recommend = require('./angular/sound_recommend');
 
 var search = require('./angular/search');
 
@@ -51,7 +52,7 @@ router.use('/user_like', user_like);
 router.use('/user_update', user_update);
 router.use('/search', search);
 router.use('/sound_nextplay', sound_nextplay);
-
+router.use('/recommend', recommend);
 
 //안드로이드
 router.use('/android/group', android_group);
