@@ -27,7 +27,7 @@ var user_pk=0;
 var rec_count=0; //유저의 기록횟수를 저장
 var bpm_sum=0; //bpm의 값
 
-//가장 최 상위 두개의 장르와 무드
+//가장 최 상위 두개의 장르와 무드(0은 null방지용으로 넣음)
 var rank_genre=[[0,0],[0,0]];
 var rank_mood=[[0,0],[0,0]];
 
@@ -104,11 +104,11 @@ function inputScore(req, res){
 					if(err) throw err;
 
 					console.log("수정완료");
-					pickBest(req, res);
+					insertHistory(req, res);
 					// recommendMusic(req, res); //출력
 				});
 
-			}else{ //새로운 row추가  
+			}else{ //새로운 row추가
 					console.log("새로운 row추가");
 					sql = 'insert into score_recommend set ?';
 					factor = {user_pk:0};
@@ -123,6 +123,21 @@ function inputScore(req, res){
 	}//if
 }
 
+//추천곡이 중복해서 나오지 않도록 DB에 기록
+function insertHistory(req, res){
+
+	let recommend_pk = req.body.recommend_pk;
+
+	sql = 'insert into history_recommend set ?';
+	factor = {user_pk:user_pk, recommend_pk:recommend_pk};
+	query = connection.query(sql, factor, function(err,rows) {
+		if(err) throw err;
+
+		//다음코스
+		pickBest(req, res);
+	});
+
+}
 
 //가장 높은 장르와 무드를 찾는다
 function pickBest(req, res){
@@ -197,8 +212,32 @@ function recommendMusic(req, res){
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 
-		console.log("recommendMusic()");
- 		var n = Math.floor(Math.random() * rows.length) + 0;
+		console.log("지금카운트: " + rec_count);
+		var n = Math.floor(Math.random() * rows.length) + 0;
+		// var n = rec_count;
+
+		//중복체크
+		var sql = 'SELECT * FROM `history_recommend` WHERE user_pk=?';
+		var factor = [user_pk];
+		var query = connection.query(sql, factor, function(err, rows){
+			if(err) throw err;
+
+			if(rows.length==0){
+				console.log("기록없음");
+				//n그대로 쓰면 됨
+				//한번도 기록한 적 없음
+			}else{
+
+				for(let i=0; i<rows.length; i++){
+					console.log("기록" + rows[i].recommend_pk);
+					if(n==rows[i].recommend_pk){
+							console.log(rows[i].recommend_pk + "번 곡은 중복");
+					}
+				}
+			}//else
+		});//중복체크sql
+
+
 		var responseData = {};
 		responseData.recommend_pk = rows[n].pk;
 		responseData.youtube = rows[n].youtube;
@@ -216,7 +255,6 @@ function recommendMusic(req, res){
 		responseData.rank_genre2 = rank_genre[1][0];
 		responseData.rank_mood1 = rank_mood[0][0];
 		responseData.rank_mood2 = rank_mood[1][0];
-
 
 		res.json( responseData );
 
