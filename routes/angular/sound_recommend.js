@@ -20,9 +20,6 @@ router.get('/', function(req, res){
   res.render('mainpage', {'testValue' : "sound_list"})
 });
 
-
-
-
 var user_pk=0;
 var rec_count=0; //유저의 기록횟수를 저장
 var bpm_sum=0; //bpm의 값
@@ -32,7 +29,7 @@ var rank_genre=[[0,0],[0,0]];
 var rank_mood=[[0,0],[0,0]];
 
 
-
+//초기화
 router.post('/reset', function(req,res){
  console.log("삭제");
  var query = connection.query('DELETE FROM `score_recommend` WHERE user_pk=?', [user_pk], function(err, rows) {
@@ -45,16 +42,38 @@ router.post('/reset', function(req,res){
 });
 
 
-
+//시작
 router.post('/', function(req,res){
 
 	var token = req.body.token; //토큰(비로그인 상태이면 0이 온다)
 	var type = req.body.type; //request면 리턴만 answer이면 등록까지
 
-	inputScore(req, res);
+
+	//토큰을 이용하여 user_pk를 찾는다
+	var sql = 'SELECT * FROM `user` WHERE token=?';
+	var factor = [token];
+	var query = connection.query(sql, factor, function(err, rows){
+		if(err) throw err;
+
+		for(let i=0; i<rows.length; i++){
+			console.log(rows[i].pk);
+		}
+
+		if(rows.length > 0){
+				user_pk=rows[0].pk;
+				console.log("토큰:" + token + " / user_pk:" + user_pk);
+				inputScore(req, res);
+		}else{
+			var responseData = {};
+			responseData.result="token_error";
+			res.json( responseData );
+		}
+	});//sql
+
+
+	// inputScore(req, res);
 	// recommendMusic(req, res);
 })
-
 
 //입력받은 정보를 DB에 기록
 function inputScore(req, res){
@@ -111,7 +130,7 @@ function inputScore(req, res){
 			}else{ //새로운 row추가
 					console.log("새로운 row추가");
 					sql = 'insert into score_recommend set ?';
-					factor = {user_pk:0};
+					factor = {user_pk:user_pk};
 					query = connection.query(sql, factor, function(err,rows) {
 						if(err) throw err;
 
@@ -163,9 +182,9 @@ function pickBest(req, res){
 								 ];
 	 rank_genre = rank_genre.sort(function(a,b) { return a[1]<b[1]? 1:a[1]>b[1]?-1:0; });
 	 console.log("베스트장르: " + rank_genre[0][0] + " / " +rank_genre[1][0]);
-	 for(let i=0; i<rank_genre.length; i++){
-		 	console.log("정렬후 : " + rank_genre[i]);
-	 }
+	 // for(let i=0; i<rank_genre.length; i++){
+		//  	console.log("정렬후 : " + rank_genre[i]);
+	 // }
 
 	 rank_mood = [ ["bell", rows[0].bell],
 									["calm", rows[0].calm],
@@ -193,16 +212,14 @@ function pickBest(req, res){
 									["nineties", rows[0].nineties]
 								];
 	rank_mood = rank_mood.sort(function(a,b) { return a[1]<b[1]? 1:a[1]>b[1]?-1:0; });
-	console.log("베스트장르: " + rank_genre[0][0] + " / " +rank_genre[1][0]);
-	for(let i=0; i<rank_genre.length; i++){
-		 console.log("정렬후 : " + rank_mood[i]);
-	}
+	console.log("베스트무드: " + rank_mood[0][0] + " / " +rank_mood[1][0]);
+	// for(let i=0; i<rank_genre.length; i++){
+	// 	 console.log("정렬후 : " + rank_mood[i]);
+	// }
 
 	 recommendMusic(req, res);
 	});//sql(SELECT)
 }
-
-
 
 //추천곡 정보를 반환
 function recommendMusic(req, res){
@@ -212,52 +229,62 @@ function recommendMusic(req, res){
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 
-		console.log("지금카운트: " + rec_count);
-		var n = Math.floor(Math.random() * rows.length) + 0;
-		// var n = rec_count;
+		var n = Math.floor(Math.random() * (rows.length-1)) + 0;
+		console.log("지금카운트: " + rec_count + " n: " + n + "전체: " + rows.length);
+
 
 		//중복체크
 		var sql = 'SELECT * FROM `history_recommend` WHERE user_pk=?';
 		var factor = [user_pk];
-		var query = connection.query(sql, factor, function(err, rows){
+		var query = connection.query(sql, factor, function(err, rows2){
 			if(err) throw err;
 
-			if(rows.length==0){
+			if(rows2.length==0){
 				console.log("기록없음");
-				//n그대로 쓰면 됨
-				//한번도 기록한 적 없음
+				//n그대로 쓰면 됨(history_recommend에 기록된적 없음)
 			}else{
 
-				for(let i=0; i<rows.length; i++){
-					console.log("기록" + rows[i].recommend_pk);
-					if(n==rows[i].recommend_pk){
-							console.log(rows[i].recommend_pk + "번 곡은 중복");
-					}
-				}
+				//전부 다 들었으면 중복허용rows.length-1
+				if(rec_count > 35){
+					console.log("한바퀴 다돌았다");
+				}else{
+
+					n_pk = rows[n].pk;
+
+					for(let i=0; i<rows2.length; i++){
+						if(n_pk==rows2[i].recommend_pk){
+							console.log("pk: " + n_pk + " 중복");
+							n = Math.floor(Math.random() * (rows.length-1)) + 0;
+							n_pk = rows[n].pk;
+							i=-1;
+						}
+					}//for
+
+				}//else(한바퀴 돌지는 않음)
 			}//else
+
+			var responseData = {};
+			responseData.result="ok";
+			responseData.recommend_pk = rows[n].pk;
+			responseData.youtube = rows[n].youtube;
+			responseData.bpm = rows[n].bpm;
+			responseData.genre1 = rows[n].genre1;
+			responseData.genre2 = rows[n].genre2;
+			responseData.mood1 = rows[n].mood1;
+			responseData.mood2 = rows[n].mood2;
+			responseData.mood3 = rows[n].mood3;
+
+			//통계정보
+			responseData.rec_count = rec_count;
+			responseData.bpm_sum = bpm_sum;
+			responseData.rank_genre1 = rank_genre[0][0];
+			responseData.rank_genre2 = rank_genre[1][0];
+			responseData.rank_mood1 = rank_mood[0][0];
+			responseData.rank_mood2 = rank_mood[1][0];
+
+			res.json( responseData );
+
 		});//중복체크sql
-
-
-		var responseData = {};
-		responseData.recommend_pk = rows[n].pk;
-		responseData.youtube = rows[n].youtube;
-		responseData.bpm = rows[n].bpm;
-		responseData.genre1 = rows[n].genre1;
-		responseData.genre2 = rows[n].genre2;
-		responseData.mood1 = rows[n].mood1;
-		responseData.mood2 = rows[n].mood2;
-		responseData.mood3 = rows[n].mood3;
-
-		//통계정보
-		responseData.rec_count = rec_count;
-		responseData.bpm_sum = bpm_sum;
-		responseData.rank_genre1 = rank_genre[0][0];
-		responseData.rank_genre2 = rank_genre[1][0];
-		responseData.rank_mood1 = rank_mood[0][0];
-		responseData.rank_mood2 = rank_mood[1][0];
-
-		res.json( responseData );
-
 })//sql
 }
 
