@@ -48,6 +48,8 @@ router.post('/', function(req,res){
 	var token = req.body.token; //토큰(비로그인 상태이면 0이 온다)
 	var type = req.body.type; //request면 리턴만 answer이면 등록까지
 
+	user_pk=0;
+	rec_count=0; //유저의 기록횟수를 저장
 
 	//토큰을 이용하여 user_pk를 찾는다
 	var sql = 'SELECT * FROM `user` WHERE token=?';
@@ -273,7 +275,7 @@ function recommendMusic(req, res){
 			responseData.mood1 = rows[n].mood1;
 			responseData.mood2 = rows[n].mood2;
 			responseData.mood3 = rows[n].mood3;
- 
+
 			//통계정보
 			responseData.rec_count = rec_count;
 			responseData.bpm_sum = bpm_sum;
