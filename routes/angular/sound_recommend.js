@@ -273,7 +273,7 @@ function recommendMusic(req, res){
 			responseData.mood1 = rows[n].mood1;
 			responseData.mood2 = rows[n].mood2;
 			responseData.mood3 = rows[n].mood3;
-
+ 
 			//통계정보
 			responseData.rec_count = rec_count;
 			responseData.bpm_sum = bpm_sum;
