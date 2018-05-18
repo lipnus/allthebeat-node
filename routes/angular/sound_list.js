@@ -121,10 +121,9 @@ function pickBest(user_pk, res){
 
 		console.log("pickBest()" + user_pk);
 
-		//추천정보가 있음
-		if(rows.length > 0){
+		//추천정보가 있고 추천과정이 완료됨
+		if(rows.length > 0 && rows[0].rec_count>9){
 
-			//추천이 이루어짐
 			responseData.recommend = 1;
 
 			rank_genre = [ ["Boombap", rows[0].Boombap],
@@ -174,11 +173,9 @@ function pickBest(user_pk, res){
 									];
 		rank_mood = rank_mood.sort(function(a,b) { return a[1]<b[1]? 1:a[1]>b[1]?-1:0; });
 		console.log("베스트무드: " + rank_mood[0][0] + " / " +rank_mood[1][0]);
-	}
+		}
 
-	recommendList(res);
-
-
+		recommendList(res);
 	});//sql(SELECT)
 }
 
@@ -187,7 +184,7 @@ function recommendList(res){
 	//음원리스트
 	var sql = 'SELECT sound_data.pk AS sound_pk, sound_data.sound_name, sound_data.sound_path, sound_data.bpm, user.nickname AS beatmaker_nickname, sound_data.img_path, sound_data.like_count, user_like.user_pk AS like_my FROM sound_data INNER JOIN user ON sound_data.user_pk = user.pk AND (sound_data.genre1 LIKE ? OR sound_data.genre1 LIKE ? OR sound_data.genre2 LIKE ? OR sound_data.genre2 LIKE ?) LEFT JOIN user_like ON sound_data.pk = user_like.sound_pk AND user_like.user_pk = ? ORDER BY sound_data.pk DESC';
 	var factor =
-	["%"+rank_genre[0][0]+"%",	"%"+rank_genre[1][0]+"%", "%"+rank_genre[0][0]+"%",	"%"+rank_genre[1][0]+"%",user_pk];
+	["%"+rank_genre[0][0]+"%",	"%"+rank_genre[1][0]+"%", "%"+rank_genre[0][0]+"%",	"%"+rank_genre[1][0]+"%", user_pk];
 	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 

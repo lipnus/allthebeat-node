@@ -91,23 +91,19 @@ function inputScore(req, res){
 
 	console.log("type: " + type);
 
-	//request인 경우 삽입없이 바로 출력
-	if(type == "request"){
-		recommendMusic(req, res); //출력
-	}else{
+	//user의 score를 담고있는 row가 있는지 확인
+	var sql = 'SELECT * FROM `score_recommend` WHERE user_pk=?';
+	var factor = [user_pk];
+	var query = connection.query(sql, factor, function(err, rows){
+		if(err) throw err;
 
-		//user의 score를 담고있는 row가 있는지 확인
-		var sql = 'SELECT * FROM `score_recommend` WHERE user_pk=?';
-		var factor = [user_pk];
-		var query = connection.query(sql, factor, function(err, rows){
-			if(err) throw err;
+		if(rows.length > 0){ //테이블에 row가 이미 존재
 
-			if(rows.length > 0){ //테이블에 row가 이미 존재
+			rec_count = rows[0].rec_count; //아래쪽에서 1더하니까 여기서도 더한걸 보내줌
+			bpm_sum = rows[0].bpm;
+			console.log(rec_count + "번째 / bpm: " + bpm_sum);
 
-				rec_count = rows[0].rec_count;
-				bpm_sum = rows[0].bpm;
-				console.log(rec_count + "번째 / bpm: " + bpm_sum);
-
+			if(type=="answer"){
 				//여기에 수정내용을 집어넣어서 sql에 삽입
 				var updateStr;
 				if(genre1 != null && genre1 != ""){  updateStr = "`"+ genre1 +"`"+  "=" +"`"+ genre1 +"`"+ "+" + score; }
@@ -128,20 +124,24 @@ function inputScore(req, res){
 					insertHistory(req, res);
 					// recommendMusic(req, res); //출력
 				});
+			}else{
+				pickBest(req, res); //request인 경우 바로 이 단계로 이동
+			}//if answer일경우
 
-			}else{ //새로운 row추가
-					console.log("새로운 row추가");
-					sql = 'insert into score_recommend set ?';
-					factor = {user_pk:user_pk};
-					query = connection.query(sql, factor, function(err,rows) {
-						if(err) throw err;
 
-						//재귀
-						inputScore(req, res);
-					});
-			}
-		});//sql(SELECT)
-	}//if
+		}else{ //새로운 row추가
+				console.log("새로운 row추가");
+				sql = 'insert into score_recommend set ?';
+				factor = {user_pk:user_pk};
+				query = connection.query(sql, factor, function(err,rows) {
+					if(err) throw err;
+
+					//재귀
+					inputScore(req, res);
+				});
+		}
+	});//sql(SELECT)
+
 }
 
 //추천곡이 중복해서 나오지 않도록 DB에 기록
