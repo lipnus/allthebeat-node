@@ -99,9 +99,8 @@ function inputScore(req, res){
 
 		if(rows.length > 0){ //테이블에 row가 이미 존재
 
-			rec_count = rows[0].rec_count; //아래쪽에서 1더하니까 여기서도 더한걸 보내줌
+			rec_count = rows[0].rec_count;
 			bpm_sum = rows[0].bpm;
-			console.log(rec_count + "번째 / bpm: " + bpm_sum);
 
 			if(type=="answer"){
 				//여기에 수정내용을 집어넣어서 sql에 삽입
@@ -121,6 +120,7 @@ function inputScore(req, res){
 					if(err) throw err;
 
 					console.log("수정완료");
+					rec_count = rec_count+1;
 					insertHistory(req, res);
 					// recommendMusic(req, res); //출력
 				});
@@ -183,7 +183,7 @@ function pickBest(req, res){
 									 ["WEST_COAST", rows[0].WEST_COAST],
 								 ];
 	 rank_genre = rank_genre.sort(function(a,b) { return a[1]<b[1]? 1:a[1]>b[1]?-1:0; });
-	 console.log("베스트장르: " + rank_genre[0][0] + " / " +rank_genre[1][0]);
+	 // console.log("베스트장르: " + rank_genre[0][0] + " / " +rank_genre[1][0]);
 	 // for(let i=0; i<rank_genre.length; i++){
 		//  	console.log("정렬후 : " + rank_genre[i]);
 	 // }
@@ -214,7 +214,7 @@ function pickBest(req, res){
 									["nineties", rows[0].nineties]
 								];
 	rank_mood = rank_mood.sort(function(a,b) { return a[1]<b[1]? 1:a[1]>b[1]?-1:0; });
-	console.log("베스트무드: " + rank_mood[0][0] + " / " +rank_mood[1][0]);
+	// console.log("베스트무드: " + rank_mood[0][0] + " / " +rank_mood[1][0]);
 	// for(let i=0; i<rank_genre.length; i++){
 	// 	 console.log("정렬후 : " + rank_mood[i]);
 	// }
@@ -232,7 +232,7 @@ function recommendMusic(req, res){
 		if(err) throw err;
 
 		var n = Math.floor(Math.random() * (rows.length-1)) + 0;
-		console.log("지금카운트: " + rec_count + " n: " + n + "전체: " + rows.length);
+		// console.log("지금카운트: " + rec_count + " n: " + n + "전체: " + rows.length);
 
 
 		//중복체크
@@ -278,6 +278,7 @@ function recommendMusic(req, res){
 
 			//통계정보
 			responseData.rec_count = rec_count;
+			console.log("카운터: " + rec_count);
 			responseData.bpm_sum = bpm_sum;
 			responseData.rank_genre1 = rank_genre[0][0];
 			responseData.rank_genre2 = rank_genre[1][0];
