@@ -31,14 +31,18 @@ var rank_mood=[[0,0],[0,0]];
 
 //초기화
 router.post('/reset', function(req,res){
- console.log("삭제");
- var query = connection.query('DELETE FROM `score_recommend` WHERE user_pk=?', [user_pk], function(err, rows) {
-	if(err) throw err;
+ 		console.log("삭제");
+		var query = connection.query('DELETE FROM `score_recommend` WHERE user_pk=?', [user_pk], function(err, rows) {
+		if(err) throw err;
 
-	responseData={};
-	responseData.result="success";
-	res.json(responseData)
- })
+			var query = connection.query('DELETE FROM `history_recommend` WHERE user_pk=?', [user_pk], function(err, rows) {
+			if(err) throw err;
+				responseData={};
+				responseData.result="success";
+				res.json(responseData);
+			})//두번째 sql
+
+		})//첫번째 sql
 });
 
 
