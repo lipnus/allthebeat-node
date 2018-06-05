@@ -18,6 +18,7 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
+var savePath = "../../../../var/www/html/test";
 
 
 //require multer for the file uploads
@@ -31,7 +32,7 @@ var multer = require('multer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {//cb는 callback함수의 약자
-    cb(null, 'http://allthebeat.com/test') //2번째 인자는 파일이 저장될 인자
+    cb(null, savePath) //2번째 인자는 파일이 저장될 인자
   },
   filename: function (req, file, cb) {
     cb(null, simpleFunction.getTime() + "_" + file.originalname) //파일의 이름을 지정함
