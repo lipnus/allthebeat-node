@@ -18,7 +18,9 @@ var connection = mysql.createConnection({
 
 connection.connect();
 
-var savePath = "../../../../var/www/html/test";
+// var savePath = "../../../../var/www/html/test";
+var savePath = "../../uploadTest"; //바탕화면
+
 
 
 //require multer for the file uploads
@@ -38,10 +40,8 @@ var storage = multer.diskStorage({
     cb(null, simpleFunction.getTime() + "_" + file.originalname) //파일의 이름을 지정함
   }
 });
+
 var upload = multer({ storage: storage }).single('photo');
-
-
-
 
 
 
