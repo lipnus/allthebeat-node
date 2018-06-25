@@ -89,7 +89,8 @@ router.post('/dbdata', function(req,res){
 
  	let token = req.body.token;
 	let sql = 'SELECT * FROM `user` WHERE token=?';
-	var query = connection.query(sql, [token], function(err, rows){
+	let factor = [token];
+	var query = connection.query(sql, factor, function(err, rows){
 		if(err) throw err;
 
 		let user_pk = 0;
