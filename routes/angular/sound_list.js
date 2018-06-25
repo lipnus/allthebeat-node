@@ -103,8 +103,6 @@ function sound_list(user_pk, res){
 		}; //for
 
 
-
-
 		//추천리스트(5개)
 		pickBest(user_pk, res);
 

@@ -18,7 +18,6 @@ connection.connect();
 
 
 var multer = require('multer');
-
 var savePath = "../../../../var/www/html/sound"; //서버에서의 경로
 var savePath2 = "../../../../var/www/html/artwork"; //서버에서의 경로
 
@@ -85,8 +84,26 @@ router.post('/track', upload.single('beat-track'), function (req, res, next) {
 
 
 
-//DB에 넣음
+//DB에 넣음(1차적으로 토큰 확인) [1]
 router.post('/dbdata', function(req,res){
+
+ 	let token = req.body.token;
+	let sql = 'SELECT * FROM `user` WHERE token=?';
+	var query = connection.query(sql, [token], function(err, rows){
+		if(err) throw err;
+
+		let user_pk = 0;
+		if(rows.length > 0){
+				user_pk=rows[0].pk;
+				enrollSound(user_pk, req, res);
+		}
+
+	});//sql
+});//post
+
+
+//DB에 넣음 [2]
+function enrollSound(token, req, res){
 	let upload = req.body.data;
 
 	sql = 'insert into sound_data set ?';
@@ -98,11 +115,9 @@ router.post('/dbdata', function(req,res){
 
 	query = connection.query(sql, factor, function(err,rows) {
 		if(err) throw err;
-
 		let responseData = {result: "ok"};
 		return res.json( responseData );
 	});
-
 
 });//post
 
@@ -135,6 +150,5 @@ router.post('/dbdata', function(req,res){
 //   // req.body will contain the text fields, if there were any
 // 	return res.send("잘 올라갔다");
 // });
-
 
 module.exports = router;
