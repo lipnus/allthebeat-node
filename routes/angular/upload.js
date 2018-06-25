@@ -120,7 +120,7 @@ function enrollSound(user_pk, req, res){
 		return res.json( responseData );
 	});
 
-});//post
+};//post
 
 
 // //가장 예전버전
