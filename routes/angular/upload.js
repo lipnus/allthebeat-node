@@ -103,12 +103,12 @@ router.post('/dbdata', function(req,res){
 
 
 //DB에 넣음 [2]
-function enrollSound(token, req, res){
+function enrollSound(user_pk, req, res){
 	let upload = req.body.data;
 
 	sql = 'insert into sound_data set ?';
 	factor = {
-		user_pk:upload.user_pk, sound_name:upload.sound_name,
+		user_pk:user_pk, sound_name:upload.sound_name,
 		sound_path:upload.sound_path, sound_path2:upload.sound_path2, sound_path3:upload.sound_path3,
 		img_path:upload.img_path, bpm:upload.bpm, genre1:upload.genre1, genre2:upload.genre2,
 		mood1:upload.mood1, mood2:upload.mood2, mood3:upload.mood3, license:upload.license};
