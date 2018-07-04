@@ -97,7 +97,7 @@ function sound_list(user_pk, res){
 		}; //for
 
 
-		//추천리스트(5개)
+		//추천리스트(4개)
 		pickBest(user_pk, res);
 
 	});//sql-1
@@ -183,7 +183,7 @@ function recommendList(res){
 		console.log( rows.length +" / "+ rank_genre[0][0] + " / " + rank_genre[1][0]);
 
 		responseData.sound_recommend_list = [];
-		for(var i=0; i<5; i++){
+		for(var i=0; i<4; i++){
 
 			//랜덤추출
 			var j =Math.floor(Math.random() * rows.length) + 0;
