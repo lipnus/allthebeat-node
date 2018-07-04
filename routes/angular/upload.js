@@ -6,16 +6,9 @@ var mysql = require('mysql') //express에 가면 mysql연동 정보가 있음
 var simpleFunction = require('./jsfile/simple_function'); //간단한 함수들을 모아놓음
 
 // AWS RDS연결
-var connection = mysql.createConnection({
-	host : 'allthebeat.csygoyq4caou.ap-northeast-2.rds.amazonaws.com',
-	port : 3306,
-	user : 'allthebeat',
-	password : '1q2w3e4r!',
-	database : 'allthebeat'
-})
-
-connection.connect();
-
+var config = require('./function/config.js'); // AWS RDS연결
+var connection = config.db_connection;
+// connection.connect();
 
 var multer = require('multer');
 var savePath = "../../../../var/www/html/sound"; //서버에서의 경로

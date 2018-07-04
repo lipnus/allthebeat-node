@@ -1,5 +1,5 @@
 function test() {
-		return "시발!!!";
+		return "test";
 }
 
 exports.testFFF = test;

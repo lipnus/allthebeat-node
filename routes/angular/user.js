@@ -5,17 +5,9 @@ var path = require('path') // 상대경로
 var mysql = require('mysql') //express에 가면 mysql연동 정보가 있음
 
 // AWS RDS연결
-var connection = mysql.createConnection({
-	host : 'allthebeat.csygoyq4caou.ap-northeast-2.rds.amazonaws.com',
-	port : 3306,
-	user : 'allthebeat',
-	password : '1q2w3e4r!',
-	database : 'allthebeat'
-})
-
-connection.connect();
-
-
+var config = require('./function/config.js'); // AWS RDS연결
+var connection = config.db_connection;
+// connection.connect();
 
 //token을 이용하여 유저정보를 가져온다
 router.post('/', function(req, res){

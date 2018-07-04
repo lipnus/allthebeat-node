@@ -5,15 +5,9 @@ var path = require('path') // 상대경로
 var mysql = require('mysql') //express에 가면 mysql연동 정보가 있음
 
 // AWS RDS연결
-var connection = mysql.createConnection({
-	host : 'allthebeat.csygoyq4caou.ap-northeast-2.rds.amazonaws.com',
-	port : 3306,
-	user : 'allthebeat',
-	password : '1q2w3e4r!',
-	database : 'allthebeat'
-})
-
-connection.connect();
+var config = require('./function/config.js'); // AWS RDS연결
+var connection = config.db_connection;
+// connection.connect();
 
 
 
@@ -48,15 +42,13 @@ router.post('/', function(req,res){
 					sound_detail(0, sound_pk, res);
 			}
 
-
 		});//sql
-	}
+	}//else
 })//post
 
 
 
 function sound_detail(user_pk, sound_pk, res){
-
 
 	//음원정보
 	var sql = 'select sound_data.pk AS sound_pk, sound_data.user_pk AS beatmaker_pk, user.nickname AS beatmaker_nickname, sound_data.sound_name, sound_data.bpm, sound_data.sound_path, sound_data.sound_path, sound_data.img_path, sound_data.genre1, sound_data.genre2, sound_data.mood1, sound_data.mood2, sound_data.mood3, sound_data.type1, sound_data.type2, sound_data.type3, sound_data.like_count, user_like.user_pk AS like_my from sound_data INNER JOIN user ON sound_data.pk=? AND sound_data.user_pk = user.pk LEFT JOIN user_like ON sound_data.pk = user_like.sound_pk AND user_like.user_pk=?';

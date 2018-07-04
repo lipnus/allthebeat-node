@@ -5,15 +5,9 @@ var path = require('path') // 상대경로
 var mysql = require('mysql') //express에 가면 mysql연동 정보가 있음
 
 // AWS RDS연결
-var connection = mysql.createConnection({
-	host : 'allthebeat.csygoyq4caou.ap-northeast-2.rds.amazonaws.com',
-	port : 3306,
-	user : 'allthebeat',
-	password : '1q2w3e4r!',
-	database : 'allthebeat'
-})
-
-connection.connect();
+var config = require('./function/config.js'); // AWS RDS연결
+var connection = config.db_connection;
+// connection.connect();
 
 var nodePath = "http://ec2-13-125-247-213.ap-northeast-2.compute.amazonaws.com:9000";
 var angularPath = "http://allthebeat.com/#";
@@ -33,14 +27,11 @@ var api_url = "";
 var access_token;
 
 //요청 테스트
-router.get('/fuck', function(req, res){
-	api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirectURI + '&state=' + state;
-   res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
-   res.end("<a href='"+ api_url + "'><img height='50' src='http://static.nid.naver.com/oauth/small_g_in.PNG'/></a>");
-});
-
-
-
+// router.get('/fuck', function(req, res){
+// 	api_url = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirectURI + '&state=' + state;
+//    res.writeHead(200, {'Content-Type': 'text/html;charset=utf-8'});
+//    res.end("<a href='"+ api_url + "'><img height='50' src='http://static.nid.naver.com/oauth/small_g_in.PNG'/></a>");
+// });
 
 
 //state를 받아서 그에 해당하는 아이디의 token을 줌
@@ -63,10 +54,6 @@ router.post('/token_please', function(req, res){
 		res.json( responseData );
 	});//sql
 });
-
-
-
-
 
 
 //콜백
@@ -100,7 +87,6 @@ router.get('/', function (req, res) {
 		        url: api_url,
 		        headers: {'Authorization': bodyData.token_type + " " + bodyData.access_token}
 		    };
-
 
 						//받은 토큰을 이용해서 유저정보 받기[2]
 						request.get(options, function (error, response, body) {
@@ -154,14 +140,11 @@ router.get('/', function (req, res) {
 									});//가입여부 확인(sql)
 								}//로그인 성공여부 확인(if)
 
-
-
 				      } else {
 				        res.status(response.statusCode).end();
 				        console.log('error = ' + response.statusCode);
 				      }
 				  	});//받은 토큰을 이용해서 유저정보 받기[2]
-
 
       } else {
         res.status(response.statusCode).end();
@@ -169,9 +152,6 @@ router.get('/', function (req, res) {
       }
   	});//토큰 값 받기[1]
 });
-
-
-
 
 
 
@@ -202,7 +182,6 @@ router.get('/callback', function(req, res){
     });
 
 		res.render('mainpage', {'testValue' : code + " / " + state})
-
 });
 
 
