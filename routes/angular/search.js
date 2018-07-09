@@ -42,7 +42,6 @@ router.post('/', function(req,res){
 
 		});//sql
 	}
-
 });//post
 
 

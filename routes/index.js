@@ -29,6 +29,7 @@ var user_update = require('./angular/user_update');
 var recommend = require('./angular/sound_recommend');
 var login_self = require('./angular/login_self');
 var join_self = require('./angular/join_self');
+var mybeat = require('./angular/mybeat');
 
 var search = require('./angular/search');
 var upload = require('./angular/upload');
@@ -42,16 +43,6 @@ router.get('/', function(req, res, next) {
 
 //테스트
 router.use('/test', test);
-
-//안드로이드
-// router.use('/android/group', android_group);
-// router.use('/android/user', android_user);
-// router.use('/android/chat_basicinfo', android_chat_basicinfo);
-// router.use('/android/chat_behavior', android_chat_behavior);
-// router.use('/android/chat_aptitude', android_chat_aptitude);
-// router.use('/android/chat_balance', android_chat_balance);
-// router.use('/android/serverinfo', android_serverinfo);
-// router.use('/android/delete_aptitude', android_delete_aptitude);
 
 // All the beat angular
 router.use('/sound_list', sound_list);
@@ -68,7 +59,7 @@ router.use('/recommend', recommend);
 router.use('/upload', upload);
 router.use('/login_self', login_self);
 router.use('/join_self', join_self);
-
+router.use('/mybeat', mybeat);
 
 
 module.exports = router;
